@@ -26,7 +26,10 @@
         * { box-sizing: border-box; }
 
         body {
-            background: var(--bg);
+            background:
+                radial-gradient(circle at 15% 0%, rgba(45, 212, 167, 0.06), transparent 40%),
+                radial-gradient(circle at 85% 15%, rgba(255, 138, 61, 0.05), transparent 40%),
+                var(--bg);
             font-family: 'Inter', sans-serif;
             color: var(--text);
         }
@@ -55,11 +58,16 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            box-shadow: 0 6px 18px -4px rgba(45, 212, 167, 0.35);
         }
         .page-title {
             font-size: 2rem;
             line-height: 1;
             text-transform: uppercase;
+            background: linear-gradient(90deg, #ffffff, #b7bcc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .page-sub {
             font-size: 0.8rem;
@@ -76,12 +84,15 @@
             border-radius: 14px;
             margin-bottom: 24px;
             overflow: hidden;
+            box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
         }
         .score-cell {
             padding: 16px 8px;
             text-align: center;
             border-right: 1px solid var(--border);
+            transition: background 0.15s;
         }
+        .score-cell:hover { background: var(--surface-alt); }
         .score-cell:last-child { border-right: none; }
         .score-num {
             font-size: 1.7rem;
@@ -104,6 +115,7 @@
             border-radius: 14px;
             padding: 18px 20px 8px;
             margin-bottom: 24px;
+            box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
         }
 
         /* ── Card heading ── */
@@ -123,6 +135,7 @@
             border-radius: 14px;
             padding: 22px;
             margin-bottom: 22px;
+            box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
         }
 
         .type-toggle {
@@ -167,12 +180,13 @@
             font-size: 0.88rem;
             background: var(--surface-alt);
             color: var(--text);
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
         .form-card .form-control::placeholder { color: #5b6169; }
         .form-card .form-control:focus,
         .form-card .form-select:focus {
-            border-color: var(--text-muted);
-            box-shadow: none;
+            border-color: var(--cardio);
+            box-shadow: 0 0 0 3px var(--cardio-dim);
             outline: none;
             background: var(--surface-alt);
             color: var(--text);
@@ -189,12 +203,13 @@
             width: 100%;
             cursor: pointer;
             color: #0c0d0f;
-            transition: opacity 0.15s, background 0.2s;
+            transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
         }
-        .btn-add.mode-cardio { background: var(--cardio); }
-        .btn-add.mode-strength { background: var(--strength); }
-        .btn-add.mode-user { background: var(--user-accent); }
-        .btn-add:hover { opacity: 0.85; }
+        .btn-add.mode-cardio { background: var(--cardio); box-shadow: 0 4px 14px -4px rgba(45, 212, 167, 0.45); }
+        .btn-add.mode-strength { background: var(--strength); box-shadow: 0 4px 14px -4px rgba(255, 138, 61, 0.45); }
+        .btn-add.mode-user { background: var(--user-accent); box-shadow: 0 4px 14px -4px rgba(122, 162, 255, 0.45); }
+        .btn-add:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-add:active { transform: translateY(0); }
 
         /* ── Filter bar ── */
         .filter-bar {
@@ -210,10 +225,11 @@
             color: var(--text);
             font-size: 0.85rem;
             padding: 9px 12px;
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
         .filter-bar .form-control::placeholder { color: #5b6169; }
         .filter-bar .form-control:focus,
-        .filter-bar .form-select:focus { box-shadow: none; border-color: var(--text-muted); outline: none; }
+        .filter-bar .form-select:focus { box-shadow: 0 0 0 3px var(--cardio-dim); border-color: var(--cardio); outline: none; }
 
         /* ── Section Label ── */
         .section-label {
@@ -233,6 +249,12 @@
             border-radius: 14px;
             overflow: hidden;
             margin-bottom: 14px;
+            box-shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.55);
+            transition: border-color 0.15s, transform 0.15s;
+        }
+        .session-card:hover {
+            border-color: #3a3f47;
+            transform: translateY(-2px);
         }
         .session-header {
             display: flex;
@@ -263,11 +285,11 @@
             border-radius: 6px;
             padding: 5px 12px;
             text-decoration: none;
-            transition: background 0.15s;
+            transition: background 0.15s, color 0.15s;
             color: var(--danger);
             border: 1px solid rgba(255, 84, 112, 0.35);
         }
-        .btn-del:hover { background: rgba(255, 84, 112, 0.1); color: var(--danger); }
+        .btn-del:hover { background: rgba(255, 84, 112, 0.14); color: var(--danger); }
 
         /* ── Table ── */
         .workout-table {
@@ -290,7 +312,9 @@
         }
         .workout-table tbody tr {
             border-bottom: 1px solid var(--surface-alt);
+            transition: background 0.15s;
         }
+        .workout-table tbody tr:hover { background: var(--surface-alt); }
         .workout-table tbody tr:last-child { border-bottom: none; }
         .workout-table tbody td {
             padding: 11px 20px;
@@ -339,7 +363,9 @@
             border-radius: 12px;
             padding: 13px 16px;
             margin-bottom: 10px;
+            transition: border-color 0.15s;
         }
+        .user-row:hover { border-color: #3a3f47; }
         .user-row .u-name { font-weight: 700; font-size: 0.9rem; }
         .user-row .u-progress { font-size: 0.74rem; color: var(--text-muted); margin-top: 2px; }
         .user-row .u-progress strong { color: var(--user-accent); }
@@ -353,8 +379,9 @@
             padding: 7px 12px;
             cursor: pointer;
             white-space: nowrap;
+            transition: opacity 0.15s;
         }
-        .btn-gen:hover { opacity: 0.85; }
+        .btn-gen:hover { opacity: 0.8; }
 
         /* ── Empty state ── */
         .empty-state {
