@@ -94,7 +94,7 @@ erDiagram
 
 ## Endpoints / Routing
 
-This application uses a server-side rendering pattern (Spring MVC with Thymeleaf) rather than a pure JSON-based REST API — each endpoint processes an HTML form and returns a rendered web page (via redirect), not a JSON response.
+This application uses a server-side rendering pattern (Spring MVC with Thymeleaf) rather than a pure JSON-based REST API each endpoint processes an HTML form and returns a rendered web page (via redirect), not a JSON response.
 
 | Method | Path | Description |
 |---|---|---|
