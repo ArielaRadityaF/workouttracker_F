@@ -52,9 +52,49 @@ Progress       : totalCalories and totalDuration, calculated from all WorkoutSes
 
 Relationships between tables use direct foreign keys (e.g. session_id on the workout table), without hidden join tables.
 
+```mermaid
+erDiagram
+  APP_USER ||--o{ WORKOUT_SESSION : has
+  APP_USER ||--|| PROGRESS : has
+  WORKOUT_SESSION ||--o{ WORKOUT : contains
+  WORKOUT ||--o{ EXERCISE : contains
+
+  APP_USER {
+    bigint id PK
+    string name
+  }
+  WORKOUT_SESSION {
+    bigint id PK
+    string date
+    bigint user_id FK
+  }
+  WORKOUT {
+    bigint id PK
+    string name
+    int duration
+    string workout_type
+    double weight
+    int reps
+    int sets
+    bigint session_id FK
+  }
+  EXERCISE {
+    bigint id PK
+    string name
+    int reps
+    bigint workout_id FK
+  }
+  PROGRESS {
+    bigint id PK
+    int total_calories
+    int total_duration
+    bigint user_id FK
+  }
+```
+
 ## Endpoints / Routing
 
-This application uses a server-side rendering pattern (Spring MVC with Thymeleaf) rather than a pure JSON-based REST API each endpoint processes an HTML form and returns a rendered web page (via redirect), not a JSON response.
+This application uses a server-side rendering pattern (Spring MVC with Thymeleaf) rather than a pure JSON-based REST API — each endpoint processes an HTML form and returns a rendered web page (via redirect), not a JSON response.
 
 | Method | Path | Description |
 |---|---|---|
