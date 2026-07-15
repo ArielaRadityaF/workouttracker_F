@@ -1,24 +1,24 @@
 # Workout Tracker
 
-Aplikasi web untuk mencatat sesi latihan (cardio & strength), melacak kalori terbakar, mengelola beberapa user, dan memantau progress masing-masing secara otomatis. Dibangun sebagai studi kasus penerapan konsep Object-Oriented Programming (OOP) dalam aplikasi nyata menggunakan Java dan Spring Boot.
+A web application for logging workout sessions (cardio and strength), tracking calories burned, managing multiple users, and automatically monitoring each user's progress. Built as a case study demonstrating Object-Oriented Programming (OOP) concepts in a real application using Java and Spring Boot.
 
-## Fitur
+## Features
 
-- Dashboard interaktif dengan ringkasan statistik (total sesi, workout, menit, kalori, user) dan grafik tren kalori
-- Form dinamis untuk menambah workout, menyesuaikan field berdasarkan tipe Cardio atau Strength
-- Manajemen user dan penugasan sesi latihan ke user tertentu
-- Perhitungan progress otomatis (total kalori dan durasi) untuk setiap user
-- Pencatatan exercise (gerakan spesifik beserta jumlah repetisi) di dalam setiap workout
-- Pencarian dan filter workout berdasarkan nama atau tipe
+- Interactive dashboard with summary statistics (total sessions, workouts, minutes, calories, users) and a calorie trend chart
+- Dynamic form for adding workouts, with fields adjusting automatically based on the Cardio or Strength type
+- User management and assignment of workout sessions to a specific user
+- Automatic progress calculation (total calories and duration) for each user
+- Exercise logging (specific movements with rep counts) within each workout
+- Search and filter workouts by name or type
 
-## Konsep OOP yang Diterapkan
+## OOP Concepts Applied
 
-| Konsep | Penerapan |
+| Concept | Implementation |
 |---|---|
-| Inheritance | `CardioWorkout` dan `StrengthWorkout` mewarisi `Workout` |
-| Polymorphism | `calculateCalories()` di-override berbeda di tiap subclass, dipanggil secara seragam lewat referensi `Workout` |
-| Encapsulation | Semua atribut bersifat private, diakses lewat getter dan setter |
-| Association | `User` memiliki banyak `WorkoutSession`, yang memiliki banyak `Workout`, yang memiliki banyak `Exercise` |
+| Inheritance | `CardioWorkout` and `StrengthWorkout` inherit from `Workout` |
+| Polymorphism | `calculateCalories()` is overridden differently in each subclass, called uniformly through a `Workout` reference |
+| Encapsulation | All attributes are private, accessed through getters and setters |
+| Association | `User` has many `WorkoutSession`, which has many `Workout`, which has many `Exercise` |
 
 ## Tech Stack
 
@@ -27,101 +27,101 @@ Aplikasi web untuk mencatat sesi latihan (cardio & strength), melacak kalori ter
 - Database: PostgreSQL (production), H2 in-memory (development)
 - Deployment: Railway
 
-## Struktur Class
+## Class Structure
 
 ```
 Workout (parent)
 ├── CardioWorkout   : duration, calculateCalories() = duration x 8
 └── StrengthWorkout : weight, reps, sets, calculateCalories() = weight x reps x sets x 0.05
 
-WorkoutSession : berisi banyak Workout
-Workout        : berisi banyak Exercise
-User           : berisi banyak WorkoutSession, memiliki satu Progress
-Progress       : totalCalories dan totalDuration, dihitung dari seluruh WorkoutSession milik User
+WorkoutSession : contains many Workout
+Workout        : contains many Exercise
+User           : contains many WorkoutSession, has one Progress
+Progress       : totalCalories and totalDuration, calculated from all WorkoutSession belonging to a User
 ```
 
-## Struktur Database
+## Database Structure
 
-| Tabel | Keterangan |
+| Table | Description |
 |---|---|
-| workout | Menyimpan CardioWorkout dan StrengthWorkout dalam satu tabel, dibedakan lewat kolom workout_type |
-| workout_session | Sesi latihan, berisi tanggal dan daftar workout |
-| app_user | Data user |
-| progress | Ringkasan total kalori dan durasi per user |
-| exercise | Gerakan spesifik di dalam sebuah workout |
+| workout | Stores both CardioWorkout and StrengthWorkout in a single table, distinguished by the workout_type column |
+| workout_session | A workout session, containing a date and a list of workouts |
+| app_user | User data |
+| progress | Summary of total calories and duration per user |
+| exercise | A specific movement within a workout |
 
-Relasi antar tabel menggunakan foreign key langsung (misalnya session_id di tabel workout), tanpa join table tersembunyi.
+Relationships between tables use direct foreign keys (e.g. session_id on the workout table), without hidden join tables.
 
-## Endpoint / Routing
+## Endpoints / Routing
 
-Aplikasi ini menggunakan pola server-side rendering (Spring MVC dengan Thymeleaf), bukan REST API murni berbasis JSON setiap endpoint memproses form HTML dan mengembalikan halaman web (redirect ke dashboard), bukan response JSON.
+This application uses a server-side rendering pattern (Spring MVC with Thymeleaf) rather than a pure JSON-based REST API each endpoint processes an HTML form and returns a rendered web page (via redirect), not a JSON response.
 
-| Method | Path | Deskripsi |
+| Method | Path | Description |
 |---|---|---|
-| GET | `/` | Menampilkan dashboard beserta seluruh data sesi, user, dan progress |
-| POST | `/add` | Menambahkan workout session baru beserta satu workout di dalamnya |
-| GET | `/delete-session/{id}` | Menghapus sebuah workout session beserta seluruh workout di dalamnya |
-| POST | `/add-user` | Menambahkan user baru |
-| POST | `/generate-progress` | Menghitung ulang dan menyimpan progress (total kalori dan durasi) untuk user tertentu |
-| POST | `/add-exercise` | Menambahkan exercise ke sebuah workout tertentu |
+| GET | `/` | Displays the dashboard with all sessions, users, and progress data |
+| POST | `/add` | Adds a new workout session along with a single workout inside it |
+| GET | `/delete-session/{id}` | Deletes a workout session and all workouts within it |
+| POST | `/add-user` | Adds a new user |
+| POST | `/generate-progress` | Recalculates and saves progress (total calories and duration) for a specific user |
+| POST | `/add-exercise` | Adds an exercise to a specific workout |
 
-Parameter form yang diterima masing-masing endpoint POST dapat dilihat langsung pada `WorkoutController.java`.
+The form parameters accepted by each POST endpoint can be found in `WorkoutController.java`.
 
 ## Environment Variables
 
-Environment variable berikut digunakan saat aplikasi berjalan dengan profile production (`application-prod.properties`), diisi lewat pengaturan environment variable di platform hosting (Railway):
+The following environment variables are used when the application runs under the production profile (`application-prod.properties`), set via the hosting platform's environment variable settings (Railway):
 
-| Variable | Deskripsi |
+| Variable | Description |
 |---|---|
-| `SPRING_PROFILES_ACTIVE` | Diisi `prod` agar aplikasi memakai konfigurasi PostgreSQL, bukan H2 |
-| `PGHOST` | Host database PostgreSQL |
-| `PGPORT` | Port database PostgreSQL |
-| `PGDATABASE` | Nama database PostgreSQL |
-| `PGUSER` | Username database PostgreSQL |
-| `PGPASSWORD` | Password database PostgreSQL |
-| `PORT` | Port yang digunakan aplikasi untuk menerima request, otomatis diisi oleh platform hosting (default 8080 jika tidak diisi) |
+| `SPRING_PROFILES_ACTIVE` | Set to `prod` so the application uses the PostgreSQL configuration instead of H2 |
+| `PGHOST` | PostgreSQL database host |
+| `PGPORT` | PostgreSQL database port |
+| `PGDATABASE` | PostgreSQL database name |
+| `PGUSER` | PostgreSQL database username |
+| `PGPASSWORD` | PostgreSQL database password |
+| `PORT` | Port the application listens on, automatically set by the hosting platform (defaults to 8080 if not set) |
 
-Saat dijalankan secara lokal tanpa environment variable ini, aplikasi otomatis memakai `application.properties` (H2 in-memory), sehingga tidak diperlukan konfigurasi tambahan apa pun.
+When run locally without these environment variables, the application automatically falls back to `application.properties` (H2 in-memory), so no additional configuration is required.
 
-## Menjalankan Secara Lokal
+## Running Locally
 
-Prasyarat: Java 17 atau lebih baru, serta Maven (atau gunakan wrapper mvnw yang sudah disediakan).
+Prerequisites: Java 17 or newer, and Maven (or use the included mvnw wrapper).
 
 ```
 ./mvnw spring-boot:run
 ```
 
-Aplikasi berjalan di `http://localhost:8080`, menggunakan database H2 in-memory (data reset setiap restart, cocok untuk development).
+The application runs at `http://localhost:8080`, using the H2 in-memory database (data resets on every restart — suitable for development).
 
-Konsol database H2 dapat diakses di `http://localhost:8080/h2-console` dengan kredensial dari `application.properties`.
+The H2 database console is available at `http://localhost:8080/h2-console` using the credentials from `application.properties`.
 
 ## Deployment
 
-Project ini dikonfigurasi untuk deploy ke Railway (https://railway.com) dengan PostgreSQL sebagai database production.
+This project is configured for deployment to Railway (https://railway.com) with PostgreSQL as the production database.
 
-1. Push repository ini ke GitHub
-2. Deploy dari Railway melalui opsi Deploy from GitHub repo
-3. Tambahkan service PostgreSQL pada project Railway yang sama
-4. Atur environment variable pada service aplikasi sesuai tabel Environment Variables di atas
+1. Push this repository to GitHub
+2. Deploy from Railway using the Deploy from GitHub repo option
+3. Add a PostgreSQL service to the same Railway project
+4. Set the environment variables on the application service according to the Environment Variables table above
 
-Konfigurasi production terdapat pada `src/main/resources/application-prod.properties`.
+The production configuration is located at `src/main/resources/application-prod.properties`.
 
-## Struktur Project
+## Project Structure
 
 ```
 src/main/java/com/example/workouttracker/
-├── controller/   : WorkoutController, menangani request HTTP
-├── model/        : Entity JPA (Workout, CardioWorkout, StrengthWorkout,
+├── controller/   : WorkoutController, handles HTTP requests
+├── model/        : JPA entities (Workout, CardioWorkout, StrengthWorkout,
 │                   WorkoutSession, User, Progress, Exercise)
-├── repository/   : Interface Spring Data JPA untuk setiap entity
-└── service/      : Business logic untuk setiap entity
+├── repository/   : Spring Data JPA interfaces for each entity
+└── service/      : Business logic for each entity
 
 src/main/resources/
 ├── templates/                   : index.html (Thymeleaf)
-├── application.properties       : konfigurasi lokal (H2)
-└── application-prod.properties  : konfigurasi production (PostgreSQL)
+├── application.properties       : local configuration (H2)
+└── application-prod.properties  : production configuration (PostgreSQL)
 ```
 
-## Lisensi
+## License
 
-Project ini dibuat untuk keperluan tugas akademik mata kuliah Object-Oriented Programming.
+This project was built for an academic assignment in an Object-Oriented Programming course.
